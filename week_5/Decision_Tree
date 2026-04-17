@@ -1,0 +1,207 @@
+
+
+Iris Classification
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+     
+
+data = pd.read_csv("/content/iris.csv")
+     
+
+data.head()
+     
+	sepal_length 	sepal_width 	petal_length 	petal_width 	species
+0 	5.1 	3.5 	1.4 	0.2 	setosa
+1 	4.9 	3.0 	1.4 	0.2 	setosa
+2 	4.7 	3.2 	1.3 	0.2 	setosa
+3 	4.6 	3.1 	1.5 	0.2 	setosa
+4 	5.0 	3.6 	1.4 	0.2 	setosa
+
+X = data.drop("species", axis=1)
+y = data["species"]
+     
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+     
+
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+     
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+     
+
+Accuracy: 1.0
+
+
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(cm)
+     
+
+Confusion Matrix:
+[[10  0  0]
+ [ 0  9  0]
+ [ 0  0 11]]
+
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+     
+
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+            xticklabels=model.classes_,
+            yticklabels=model.classes_)
+
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.title("Confusion Matrix")
+plt.show()
+     
+
+Drug Classification
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.preprocessing import LabelEncoder
+     
+
+data = pd.read_csv("/content/drug.csv")
+     
+
+data.head()
+     
+	Age 	Sex 	BP 	Cholesterol 	Na_to_K 	Drug
+0 	23 	F 	HIGH 	HIGH 	25.355 	drugY
+1 	47 	M 	LOW 	HIGH 	13.093 	drugC
+2 	47 	M 	LOW 	HIGH 	10.114 	drugC
+3 	28 	F 	NORMAL 	HIGH 	7.798 	drugX
+4 	61 	F 	LOW 	HIGH 	18.043 	drugY
+
+le = LabelEncoder()
+     
+
+data['Sex'] = le.fit_transform(data['Sex'])
+data['BP'] = le.fit_transform(data['BP'])
+data['Cholesterol'] = le.fit_transform(data['Cholesterol'])
+data['Drug'] = le.fit_transform(data['Drug'])
+     
+
+data.head()
+     
+	Age 	Sex 	BP 	Cholesterol 	Na_to_K 	Drug
+0 	23 	0 	0 	0 	25.355 	4
+1 	47 	1 	1 	0 	13.093 	2
+2 	47 	1 	1 	0 	10.114 	2
+3 	28 	0 	2 	0 	7.798 	3
+4 	61 	0 	1 	0 	18.043 	4
+
+X = data.drop("Drug", axis=1)
+y = data["Drug"]
+     
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+     
+
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+     
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+     
+
+Accuracy: 1.0
+
+
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(cm)
+     
+
+Confusion Matrix:
+[[ 6  0  0  0  0]
+ [ 0  3  0  0  0]
+ [ 0  0  5  0  0]
+ [ 0  0  0 11  0]
+ [ 0  0  0  0 15]]
+
+
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix")
+plt.show()
+     
+
+Decision Tree Regressor (Petrol Consumption)
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
+     
+
+data = pd.read_csv("/content/petrol_consumption.csv")
+     
+
+data.head()
+     
+	Petrol_tax 	Average_income 	Paved_Highways 	Population_Driver_licence(%) 	Petrol_Consumption
+0 	9.0 	3571 	1976 	0.525 	541
+1 	9.0 	4092 	1250 	0.572 	524
+2 	9.0 	3865 	1586 	0.580 	561
+3 	7.5 	4870 	2351 	0.529 	414
+4 	8.0 	4399 	431 	0.544 	410
+
+X = data.drop("Petrol_Consumption", axis=1)
+y = data["Petrol_Consumption"]
+     
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+     
+
+model = DecisionTreeRegressor()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+     
+
+mae = mean_absolute_error(y_test, y_pred)
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+
+print("Mean Absolute Error:", mae)
+print("Mean Squared Error:", mse)
+print("Root Mean Squared Error:", rmse)
+     
+
+Mean Absolute Error: 102.1
+Mean Squared Error: 18892.1
+Root Mean Squared Error: 137.4485358234128
+
+
+
+     
