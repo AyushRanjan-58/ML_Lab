@@ -1,0 +1,65 @@
+
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+df = pd.read_csv("iriss.csv")
+
+df.head()
+
+	sepal_length 	sepal_width 	petal_length 	petal_width 	species
+0 	5.1 	3.5 	1.4 	0.2 	setosa
+1 	4.9 	3.0 	1.4 	0.2 	setosa
+2 	4.7 	3.2 	1.3 	0.2 	setosa
+3 	4.6 	3.1 	1.5 	0.2 	setosa
+4 	5.0 	3.6 	1.4 	0.2 	setosa
+
+y = df['species']
+
+x = df.drop(columns='species')
+
+x.head()
+
+	sepal_length 	sepal_width 	petal_length 	petal_width
+0 	5.1 	3.5 	1.4 	0.2
+1 	4.9 	3.0 	1.4 	0.2
+2 	4.7 	3.2 	1.3 	0.2
+3 	4.6 	3.1 	1.5 	0.2
+4 	5.0 	3.6 	1.4 	0.2
+
+y.head()
+
+0    setosa
+1    setosa
+2    setosa
+3    setosa
+4    setosa
+Name: species, dtype: object
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+
+linear_svm = SVC(kernel='linear')
+linear_svm.fit(x_train, y_train)
+
+SVC(kernel='linear')
+
+In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook.
+On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.
+
+y_pred_linear = linear_svm.predict(x_test)
+
+print("=== Linear Kernel ===")
+print("Accuracy:", accuracy_score(y_test, y_pred_linear))
+print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred_linear))
+
+=== Linear Kernel ===
+Accuracy: 1.0
+Confusion Matrix:
+ [[10  0  0]
+ [ 0  9  0]
+ [ 0  0 11]]
+
+ 
+
