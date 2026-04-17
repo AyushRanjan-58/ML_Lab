@@ -1,0 +1,210 @@
+
+
+import pandas as pd
+import numpy as np
+     
+
+df1=pd.read_csv('diabetes.csv');
+     
+
+df1.info()
+     
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 768 entries, 0 to 767
+Data columns (total 9 columns):
+ #   Column                    Non-Null Count  Dtype  
+---  ------                    --------------  -----  
+ 0   Pregnancies               768 non-null    int64  
+ 1   Glucose                   768 non-null    int64  
+ 2   BloodPressure             768 non-null    int64  
+ 3   SkinThickness             768 non-null    int64  
+ 4   Insulin                   768 non-null    int64  
+ 5   BMI                       768 non-null    float64
+ 6   DiabetesPedigreeFunction  768 non-null    float64
+ 7   Age                       768 non-null    int64  
+ 8   Outcome                   768 non-null    int64  
+dtypes: float64(2), int64(7)
+memory usage: 54.1 KB
+
+
+df1.describe()
+     
+	Pregnancies 	Glucose 	BloodPressure 	SkinThickness 	Insulin 	BMI 	DiabetesPedigreeFunction 	Age 	Outcome
+count 	768.000000 	768.000000 	768.000000 	768.000000 	768.000000 	768.000000 	768.000000 	768.000000 	768.000000
+mean 	3.845052 	120.894531 	69.105469 	20.536458 	79.799479 	31.992578 	0.471876 	33.240885 	0.348958
+std 	3.369578 	31.972618 	19.355807 	15.952218 	115.244002 	7.884160 	0.331329 	11.760232 	0.476951
+min 	0.000000 	0.000000 	0.000000 	0.000000 	0.000000 	0.000000 	0.078000 	21.000000 	0.000000
+25% 	1.000000 	99.000000 	62.000000 	0.000000 	0.000000 	27.300000 	0.243750 	24.000000 	0.000000
+50% 	3.000000 	117.000000 	72.000000 	23.000000 	30.500000 	32.000000 	0.372500 	29.000000 	0.000000
+75% 	6.000000 	140.250000 	80.000000 	32.000000 	127.250000 	36.600000 	0.626250 	41.000000 	1.000000
+max 	17.000000 	199.000000 	122.000000 	99.000000 	846.000000 	67.100000 	2.420000 	81.000000 	1.000000
+
+df1.head()
+     
+	Pregnancies 	Glucose 	BloodPressure 	SkinThickness 	Insulin 	BMI 	DiabetesPedigreeFunction 	Age 	Outcome
+0 	6 	148 	72 	35 	0 	33.6 	0.627 	50 	1
+1 	1 	85 	66 	29 	0 	26.6 	0.351 	31 	0
+2 	8 	183 	64 	0 	0 	23.3 	0.672 	32 	1
+3 	1 	89 	66 	23 	94 	28.1 	0.167 	21 	0
+4 	0 	137 	40 	35 	168 	43.1 	2.288 	33 	1
+K-Nearest Neighbors (KNN) Model
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Separate features (X) and target (y)
+X = df1.drop('Outcome', axis=1)
+y = df1['Outcome']
+
+# Split the data into training and testing sets (80% train, 20% test)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+print("Features scaled successfully.")
+     
+
+Features scaled successfully.
+
+
+knn = KNeighborsClassifier(n_neighbors=13)
+
+knn.fit(X_train, y_train)
+
+print("KNN model trained successfully.")
+     
+
+KNN model trained successfully.
+
+
+y_pred = knn.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy Score: {accuracy:.4f}")
+
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues',
+            xticklabels=['Predicted Negative', 'Predicted Positive'],
+            yticklabels=['Actual Negative', 'Actual Positive'])
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix for KNN Model')
+plt.show()
+     
+
+Accuracy Score: 0.7727
+
+Iris dataset
+
+df=pd.read_csv('iris.csv')
+     
+
+df.info(
+
+)
+     
+
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 150 entries, 0 to 149
+Data columns (total 5 columns):
+ #   Column        Non-Null Count  Dtype  
+---  ------        --------------  -----  
+ 0   sepal_length  150 non-null    float64
+ 1   sepal_width   150 non-null    float64
+ 2   petal_length  150 non-null    float64
+ 3   petal_width   150 non-null    float64
+ 4   species       150 non-null    object 
+dtypes: float64(4), object(1)
+memory usage: 6.0+ KB
+
+
+df.head()
+     
+	sepal_length 	sepal_width 	petal_length 	petal_width 	species
+0 	5.1 	3.5 	1.4 	0.2 	setosa
+1 	4.9 	3.0 	1.4 	0.2 	setosa
+2 	4.7 	3.2 	1.3 	0.2 	setosa
+3 	4.6 	3.1 	1.5 	0.2 	setosa
+4 	5.0 	3.6 	1.4 	0.2 	setosa
+K-Nearest Neighbors (KNN) Model for Iris Dataset
+
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+X_iris = df.drop('species', axis=1)
+y_iris = df['species']
+
+
+le = LabelEncoder()
+y_iris_encoded = le.fit_transform(y_iris)
+
+print("Species mapped to numerical values:")
+for i, species_name in enumerate(le.classes_):
+    print(f"{species_name}: {i}")
+
+X_train_iris, X_test_iris, y_train_iris, y_test_iris = train_test_split(X_iris, y_iris_encoded, test_size=0.2, random_state=42)
+
+     
+
+Species mapped to numerical values:
+setosa: 0
+versicolor: 1
+virginica: 2
+
+
+# Scale the features
+scaler_iris = StandardScaler()
+X_train_iris_scaled = scaler_iris.fit_transform(X_train_iris)
+X_test_iris_scaled = scaler_iris.transform(X_test_iris)
+
+print("Iris dataset features scaled successfully.")
+     
+
+Iris dataset features scaled successfully.
+
+
+
+knn_iris = KNeighborsClassifier(n_neighbors=5)
+
+knn_iris.fit(X_train_iris_scaled, y_train_iris)
+
+print("KNN model for Iris dataset trained successfully.")
+     
+
+KNN model for Iris dataset trained successfully.
+
+
+y_pred_iris = knn_iris.predict(X_test_iris_scaled)
+
+accuracy_iris = accuracy_score(y_test_iris, y_pred_iris)
+print(f"Accuracy Score for Iris KNN Model: {accuracy_iris:.4f}")
+
+conf_matrix_iris = confusion_matrix(y_test_iris, y_pred_iris)
+
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix_iris, annot=True, fmt='d', cmap='Blues',
+            xticklabels=le.classes_,
+            yticklabels=le.classes_)
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix for Iris KNN Model')
+plt.show()
+     
+
+Accuracy Score for Iris KNN Model: 1.0000
+
